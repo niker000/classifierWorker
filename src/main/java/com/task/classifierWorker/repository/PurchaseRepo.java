@@ -10,4 +10,6 @@ public interface PurchaseRepo {
     PurchaseEntry getNode(String code);
 
     List<PurchaseEntry> getSubNodes(String node);
+
+    List<PurchaseEntry> getHighestEntries();
 }

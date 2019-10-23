@@ -3,6 +3,7 @@ package com.task.classifierWorker.controller;
 import com.task.classifierWorker.dto.UserDTO;
 import com.task.classifierWorker.service.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,7 +16,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String  createUser(@RequestBody UserDTO userDTO) {
+    public String createUser(@RequestBody UserDTO userDTO) {
         userService.createUser(userDTO);
         return "redirect:/login";
     }

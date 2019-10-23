@@ -1,6 +1,7 @@
 package com.task.classifierWorker.service;
 
 import com.task.classifierWorker.dto.UserDTO;
+import com.task.classifierWorker.exception.ElementExistException;
 import com.task.classifierWorker.model.Role;
 import com.task.classifierWorker.model.User;
 import com.task.classifierWorker.repository.UserRepo;
@@ -15,7 +16,10 @@ public class UserService {
     }
 
     public User createUser(UserDTO userDTO) {
-        User user = new User(userDTO.getLogin(), userDTO.getPassword(), Role.USER);
+        if (userRepo.getUserFromDb(userDTO.getLogin()) != null) {
+            throw new ElementExistException("Such user is already exist");
+        }
+        User user = new User(userDTO.getLogin(), userDTO.getPassword(), Role.USER, true);
         userRepo.createUser(user);
         return user;
     }

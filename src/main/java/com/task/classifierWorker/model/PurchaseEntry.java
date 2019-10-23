@@ -3,7 +3,7 @@ package com.task.classifierWorker.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PurchaseEntry {
-
+    @JsonIgnore
     private Integer id;
 
     private String purchaseCode;

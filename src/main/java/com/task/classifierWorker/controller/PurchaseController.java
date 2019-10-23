@@ -3,6 +3,7 @@ package com.task.classifierWorker.controller;
 import com.task.classifierWorker.model.PurchaseEntry;
 import com.task.classifierWorker.service.DbUpdaterService;
 import com.task.classifierWorker.service.PurchaseVocabularyService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,12 +24,14 @@ public class PurchaseController {
     }
 
     @GetMapping("/updatedb")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void createEntry() throws IOException {
+
         dbUpdaterService.update();
     }
 
     @GetMapping("/node")
-    public PurchaseEntry getByCode(@RequestParam String code){
+    public PurchaseEntry getByCode(@RequestParam String code) {
         return purchaseService.getNode(code);
     }
 

@@ -1,5 +1,6 @@
 package com.task.classifierWorker.service;
 
+import com.task.classifierWorker.exception.NoSuchEntryException;
 import com.task.classifierWorker.model.PurchaseEntry;
 import com.task.classifierWorker.repository.PurchaseRepo;
 import com.task.classifierWorker.util.TreePathCreator;
@@ -9,18 +10,34 @@ import java.util.List;
 
 @Service
 public class PurchaseVocabularyService {
-     private PurchaseRepo purchaseRepo;
-     private TreePathCreator treePathCreator;
+    private PurchaseRepo purchaseRepo;
+    private TreePathCreator treePathCreator;
+
     public PurchaseVocabularyService(PurchaseRepo purchaseRepo, TreePathCreator treePathCreator) {
         this.purchaseRepo = purchaseRepo;
         this.treePathCreator = treePathCreator;
     }
 
     public PurchaseEntry getNode(String nodeCode) {
-        return purchaseRepo.getNode(nodeCode);
+        PurchaseEntry purchaseEntry = purchaseRepo.getNode(nodeCode);
+        if (purchaseEntry == null) {
+            throw new NoSuchEntryException("There is no classifier with this code.");
+        }
+        return purchaseEntry;
     }
 
     public List<PurchaseEntry> getSubnodes(String nodeCode) {
-        return purchaseRepo.getSubNodes(treePathCreator.createTreePath(nodeCode));
+        List<PurchaseEntry> purchaseEntries;
+        if(nodeCode.equals("")) {
+            purchaseEntries = purchaseRepo.getHighestEntries();
+        } else {
+            purchaseEntries = purchaseRepo.getSubNodes(treePathCreator.createTreePath(nodeCode));
+        }
+
+        if (purchaseEntries.isEmpty()) {
+            throw new NoSuchEntryException("This classifier has no nodes");
+        }
+
+        return purchaseEntries;
     }
 }
