@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class TreePathCreator {
     public String createTreePath(String code) {
+        if(code.length()<3) {
+            throw new IllegalArgumentException("Code is not valid");
+        }
         StringBuilder treePath = new StringBuilder();
         treePath.append(code, 0, 2);
         String[] str = code.split("");

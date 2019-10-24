@@ -13,15 +13,36 @@ var items = [{
     "title": "ghi",
     "purchaseCode": "03210000-3"
 }];
+alert("ты пидор")
+$('#searchNodes').on('click', function() {
+  var searchInput = $('#code').val();
+  var url = "http://localhost:8080/app/nodes?code=" + searchInput;
+});
 
-$(document).ready(function() {
-
-  $("ul").click(function() {
-    var li = document.createElement("li")
-    li.innerText = items[0].purchaseCode
-    var ul = document.createElement("ul")
-    var list = ul.appendChild(li)
-     event.target.appendChild(ul)
-    console.log("sss")
+$('#searchNodes').on('click', (function() {
+  var oldDiv = document.getElementById("old")
+  var div;
+  var li;
+  var resultDiv = document.createElement("div")
+  items.forEach(function(element) {
+    div = document.createElement("div")
+    li = document.createElement("li")
+    li.innerText = element.purchaseCode + "\n" + element.title
+    div.append(li)
+    console.log("end")
+    resultDiv.append(div)
   });
+
+  var elem = document.getElementById("subNodes")
+  if (oldDiv) {
+    elem.replaceChild(resultDiv, oldDiv)
+  } else {
+      $('.subNodes').append(resultDiv)
+  }
+  resultDiv.setAttribute("id", "old")
+}));
+
+$('#searchNode').on('click', function() {
+  var searchInput = $('#code').val();
+  var url = "http://localhost:8080/app/node?code=" + searchInput;
 });

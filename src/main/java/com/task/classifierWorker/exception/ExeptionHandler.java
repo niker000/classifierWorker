@@ -15,11 +15,16 @@ public class ExeptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchEntryException.class)
-    protected ResponseEntity<Object> handlUserExist(NoSuchEntryException ex) {
+    protected ResponseEntity<Object> handlNoSuchElement(NoSuchEntryException ex) {
         AppError appError = new AppError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return buildResponseEntity(appError);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handlIllegalArgument(IllegalArgumentException ex) {
+        AppError appError = new AppError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return buildResponseEntity(appError);
+    }
 
     private ResponseEntity<Object> buildResponseEntity(AppError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());

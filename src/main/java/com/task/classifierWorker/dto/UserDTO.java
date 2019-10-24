@@ -1,23 +1,23 @@
 package com.task.classifierWorker.dto;
 
 public class UserDTO {
-    String login;
-    String password;
+    private String username;
+    private String password;
 
     public UserDTO() {
     }
 
-    public UserDTO(String login, String password) {
-        this.login = login;
+    public UserDTO(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

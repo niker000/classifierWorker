@@ -10,4 +10,6 @@ public interface UserRepo {
     boolean createUser(User user);
 
     User getUserFromDb(String username);
+
+    boolean isExist(String username);
 }

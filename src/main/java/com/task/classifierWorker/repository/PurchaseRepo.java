@@ -12,4 +12,6 @@ public interface PurchaseRepo {
     List<PurchaseEntry> getSubNodes(String node);
 
     List<PurchaseEntry> getHighestEntries();
+
+    boolean isExists(String code);
 }

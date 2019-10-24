@@ -16,10 +16,10 @@ public class UserService {
     }
 
     public User createUser(UserDTO userDTO) {
-        if (userRepo.getUserFromDb(userDTO.getLogin()) != null) {
+        if (userRepo.isExist(userDTO.getUsername())) {
             throw new ElementExistException("Such user is already exist");
         }
-        User user = new User(userDTO.getLogin(), userDTO.getPassword(), Role.USER, true);
+        User user = new User(userDTO.getUsername(), userDTO.getPassword(), Role.USER, true);
         userRepo.createUser(user);
         return user;
     }

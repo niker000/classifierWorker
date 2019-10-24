@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -35,13 +36,21 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User getUserFromDb(String login) {
+    public User getUserFromDb(String username) {
         String sql = "SELECT u.username, u.password, u.active, r.role \n" +
                 "FROM users u  \n" +
                 "LEFT JOIN roles r ON u.role_id = r.id \n" +
-                "WHERE u.username=?";
-        Object[] args = new Object[]{login};
+                "WHERE u.username='" + username + "'";
+        List<User> users = jdbcTemplate.query(sql, userMapper);
+        if(users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
+    }
 
-        return jdbcTemplate.queryForObject(sql, args, userMapper);
+    @Override
+    public boolean isExist(String username) {
+        String sql = "SELECT * FROM users WHERE username='"+username+"'";
+        return !jdbcTemplate.query(sql, userMapper).isEmpty();
     }
 }

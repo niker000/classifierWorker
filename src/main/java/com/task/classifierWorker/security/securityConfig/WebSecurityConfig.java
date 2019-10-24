@@ -2,6 +2,7 @@ package com.task.classifierWorker.security.securityConfig;
 
 import com.task.classifierWorker.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,20 +18,18 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private DataSource dataSource;
     private UserDetailsServiceImpl userDetailsService;
 
-    public WebSecurityConfig(DataSource dataSource, UserDetailsServiceImpl userDetailsService) {
-        this.dataSource = dataSource;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET,"/registration").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")

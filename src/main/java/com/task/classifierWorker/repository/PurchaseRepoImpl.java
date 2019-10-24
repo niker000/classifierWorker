@@ -62,4 +62,10 @@ public class PurchaseRepoImpl implements PurchaseRepo {
         String sql = "SELECT * FROM procurement_vocabulary WHERE tree_path::varchar NOT LIKE '%.%'";
         return jdbcTemplate.query(sql,mapper);
     }
+
+    @Override
+    public boolean isExists(String code) {
+        String sql = "SELECT * FROM procurement_vocabulary WHERE code='"+code+"'";
+        return !jdbcTemplate.query(sql,mapper).isEmpty();
+    }
 }

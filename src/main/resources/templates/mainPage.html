@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+<script>
+function show() {
+  var searchInput = $("#code").val();
+  console.log(searchInput)
+  var url = "http://localhost:8080/app/nodes?code=" + searchInput;
+  var oldDiv = document.getElementById("oldNodes")
+  var resultDiv = document.createElement("div")
+
+  $.get(url, function(data, status) {
+    data.forEach(function(item) {
+    resultDiv.append(buildElementFromResponse(item))
+  });
+})
+  var elem = $(".subNodes")
+  console.log(resultDiv + " " + oldDiv)
+  if (oldDiv) {
+    oldDiv.remove()
+    elem.append(resultDiv)
+  } else {
+    $(".subNodes").append(resultDiv)
+  }
+  resultDiv.setAttribute("id", "oldNodes")
+};
+
+$("#searchNode").on("click", function() {
+  var searchInput = $("#code").val();
+  var url = "http://localhost:8080/app/node?code=" + searchInput;
+  $.get(url, function(data, status) {
+    $(".classifierGetter").append(buildElementFromResponse(classifier))
+  })
+  var classifier = getJson(url);
+
+
+});
+
+function buildElementFromResponse(classifier) {
+  var div = document.createElement("div")
+  var li = document.createElement("li")
+  li.innerText = classifier.purchaseCode + "\n" + classifier.title
+  div.append(li)
+  return div
+}
+</script>
+</head>
+
+<body>
+<div>
+    <div class="subNodes">
+        <h2>Get subnodes of classifier</h2>
+        <div><input type="text" id="code"/></div>
+        <div><input type="submit" id="searchNodes" value="Search" onclick="show()"/></div>
+    </div>
+
+    <div class = "classifierGetter">
+        <h2>Enter classifier code</h2>
+        <div><input type="text" id="code" /></div>
+        <div><input type="submit" id="searchNode" value="Search" /></div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -19,11 +19,10 @@ public class PurchaseVocabularyService {
     }
 
     public PurchaseEntry getNode(String nodeCode) {
-        PurchaseEntry purchaseEntry = purchaseRepo.getNode(nodeCode);
-        if (purchaseEntry == null) {
+        if (!purchaseRepo.isExists(nodeCode)) {
             throw new NoSuchEntryException("There is no classifier with this code.");
         }
-        return purchaseEntry;
+        return purchaseRepo.getNode(nodeCode);
     }
 
     public List<PurchaseEntry> getSubnodes(String nodeCode) {
