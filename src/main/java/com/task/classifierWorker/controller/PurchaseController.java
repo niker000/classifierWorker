@@ -25,7 +25,7 @@ public class PurchaseController {
 
     @GetMapping("/updatedb")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void createEntry() throws IOException {
+    public void update() throws IOException {
 
         dbUpdaterService.update();
     }

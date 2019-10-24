@@ -1,69 +1,107 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
-<script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <script>
 function show() {
   var searchInput = $("#code").val();
   console.log(searchInput)
   var url = "http://localhost:8080/app/nodes?code=" + searchInput;
-  var oldDiv = document.getElementById("oldNodes")
+  var oldDiv = document.getElementById("oldNode")
   var resultDiv = document.createElement("div")
+  console.log(url)
+      $.get(url, function(data, status) {
+        data.forEach(function(item) {
+        resultDiv.append(buildElementFromResponse(item))
+      });
+    })
+      var elem = $("#subNodes")
+      console.log(resultDiv + " " + oldDiv)
+      replaceOldOnes(elem, resultDiv, oldDiv)
+      resultDiv.setAttribute("id", "oldNode")
+    };
 
-  $.get(url, function(data, status) {
-    data.forEach(function(item) {
-    resultDiv.append(buildElementFromResponse(item))
-  });
-})
-  var elem = $(".subNodes")
-  console.log(resultDiv + " " + oldDiv)
-  if (oldDiv) {
-    oldDiv.remove()
-    elem.append(resultDiv)
-  } else {
-    $(".subNodes").append(resultDiv)
-  }
-  resultDiv.setAttribute("id", "oldNodes")
-};
+    function searchNode(){
+      var searchInput = $("#code2").val();
+      console.log(searchInput)
+      var url = "http://localhost:8080/app/node?code=" + searchInput;
 
-$("#searchNode").on("click", function() {
-  var searchInput = $("#code").val();
-  var url = "http://localhost:8080/app/node?code=" + searchInput;
-  $.get(url, function(data, status) {
-    $(".classifierGetter").append(buildElementFromResponse(classifier))
-  })
-  var classifier = getJson(url);
+      $.get(url, function(data, status) {
+        var oldDiv = document.getElementById("oldNode")
+        var parent = $("#classifierGetter")
+        var newNode =buildElementFromResponse(data)
+        replaceOldOnes(parent, newNode, oldDiv)
+        newNode.setAttribute("id", "oldNode")
+      })
+    };
 
+    function buildElementFromResponse(classifier) {
+      var div = document.createElement("div")
+      var li = document.createElement("li")
+      li.innerText = classifier.purchaseCode + "\n" + classifier.title
+      div.append(li)
+      return div
+    }
 
-});
+    function replaceOldOnes(parent, newNode, oldNode) {
+    console.log(parent + " " + newNode + " " + oldNode)
+    if (oldNode) {
+        oldNode.remove()
+        parent.append(newNode)
+      } else {
+        $(parent).append(newNode)
+      }
+    }
 
-function buildElementFromResponse(classifier) {
-  var div = document.createElement("div")
-  var li = document.createElement("li")
-  li.innerText = classifier.purchaseCode + "\n" + classifier.title
-  div.append(li)
-  return div
-}
-</script>
+    function updateDB() {
+        $.get("http://localhost:8080/app/updatedb", function(data, status) {
+            alert("Data base was success updated")
+      })
+    }
+
+    </script>
 </head>
 
-<body>
-<div>
-    <div class="subNodes">
-        <h2>Get subnodes of classifier</h2>
-        <div><input type="text" id="code"/></div>
-        <div><input type="submit" id="searchNodes" value="Search" onclick="show()"/></div>
-    </div>
+<body style="background-color: #ccffcc">
+<div class="container-fluid">
+    <form action="/logout" method="post">
+        <input type="submit" value="logout">
+    </form>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="co-xl" id="subNodes">
+            <div class="p-3 lg-2 bg-info text-white"><h2>Get subnodes of classifier</h2></div>
+            <div><input type="text" id="code"/></div>
+            <div><input type="submit" id="searchNodes" value="Search" onclick="show()"/></div>
+        </div>
 
-    <div class = "classifierGetter">
-        <h2>Enter classifier code</h2>
-        <div><input type="text" id="code" /></div>
-        <div><input type="submit" id="searchNode" value="Search" /></div>
+        <div class="co-xl" id="classifierGetter">
+            <div class="p-3 lg-2 bg-info text-white"><h2>Enter classifier code</h2></div>
+            <div><input type="text" id="code2"/></div>
+            <div><input type="submit" id="searchNode" value="Search" onclick="searchNode()"/></div>
+        </div>
+
+        <div class="co-xl" id="updater">
+            <div class="p-3 lg-2 bg-info text-white"><h2>Press to update database</h2></div>
+
+            <div><input type="submit" value="update" onclick="updateDB()"/></div>
+        </div>
     </div>
 </div>
-
-
 </body>
 </html>

@@ -17,7 +17,6 @@ public class PurchaseRepoImpl implements PurchaseRepo {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleJdbcInsert;
     private PurchaseEntryMapper mapper;
-    private SimpleJdbcCall simpleUpdateDb;
 
     public PurchaseRepoImpl(JdbcTemplate jdbcTemplate, PurchaseEntryMapper mapper) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,7 +24,6 @@ public class PurchaseRepoImpl implements PurchaseRepo {
                 .withTableName("procurement_vocabulary")
                 .usingGeneratedKeyColumns("id");
         this.mapper = mapper;
-        this.simpleUpdateDb = new SimpleJdbcCall(jdbcTemplate).withFunctionName("updatedb");
     }
 
     public void updateDb(List<PurchaseEntry> data) {
@@ -43,6 +41,7 @@ public class PurchaseRepoImpl implements PurchaseRepo {
         String sql = "SELECT updatedb(?,?,?::ltree); ";
 
         jdbcTemplate.batchUpdate(sql, batch);
+
     }
 
     public PurchaseEntry getNode(String node) {
@@ -60,12 +59,12 @@ public class PurchaseRepoImpl implements PurchaseRepo {
     @Override
     public List<PurchaseEntry> getHighestEntries() {
         String sql = "SELECT * FROM procurement_vocabulary WHERE tree_path::varchar NOT LIKE '%.%'";
-        return jdbcTemplate.query(sql,mapper);
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Override
     public boolean isExists(String code) {
-        String sql = "SELECT * FROM procurement_vocabulary WHERE code='"+code+"'";
-        return !jdbcTemplate.query(sql,mapper).isEmpty();
+        String sql = "SELECT * FROM procurement_vocabulary WHERE code='" + code + "'";
+        return !jdbcTemplate.query(sql, mapper).isEmpty();
     }
 }
